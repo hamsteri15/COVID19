@@ -1,0 +1,125 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7  
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     icoFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         100; // NEEDS TO BE HIGHER! (IN THE ORDER OR 10K)
+
+deltaT          1E-4;
+
+adjustTimeStep  yes;
+
+maxCo           0.8;
+
+writeControl    runTime;
+
+writeInterval   100;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   8;
+
+runTimeModifiable true;
+
+
+
+libs
+(
+ "libutilityFunctionObjects.so"
+ //"libOneDimensionalFWallModel2.so"
+ );
+
+
+functions
+{
+
+
+    #include "vtk_planes"
+
+
+    fieldMinMax1
+    {
+        type            fieldMinMax;
+        libs            ("libfieldFunctionObjects.so");
+
+        fields          (U);
+
+
+        location   yes;
+
+        mode            magnitude; // magnitude | component
+    }
+
+    
+     rhofunc
+   {
+      type                 writeObjects;
+      libs            ("libutilityFunctionObjects.so");
+      writeControl        writeTime;
+      //writeInterval       1;
+      objects
+      ("rho");
+   }
+
+
+
+   
+    
+    fieldAverage1
+    {
+        type fieldAverage;
+        libs ("libfieldFunctionObjects.so");
+        writeControl        writeTime;
+        restartOnRestart    false;
+        restartOnOutput     false;
+        periodicRestart     false;
+        restartPeriod       0.05;
+        fields
+        (
+           
+            U
+            {
+                mean            on;
+                prime2Mean      on;
+                base            time;
+              
+            }
+            
+        );
+    
+    }
+    
+
+}
+
+
+
+// ************************************************************************* //

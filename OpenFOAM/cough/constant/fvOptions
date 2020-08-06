@@ -1,0 +1,159 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7  
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+momentumSource
+{
+    type            meanVelocityForce;
+    selectionMode   all;
+
+    fields          (U);
+    Ubar            (0.01 -0.01 0.006);
+
+
+}
+
+/*
+momentumSource
+{
+    type            vectorCodedSource;
+    active          on;
+    name            vectorCodedSource;
+    fields (U);
+       
+ 
+    vectorCodedSourceCoeffs
+    {
+        fields (U);
+        selectionMode     all;
+        writeSource     on;
+ 
+        codeInclude
+        #{  
+       
+            #include <Random.H>
+            #include <math.h>
+            #include <vector> //std::vector
+        #};
+ 
+ 
+        codeCorrect
+        #{
+              Info<< "**codeCorrect**" << nl;
+        #};
+ 
+       codeAddSup
+       #{
+            scalar pi = 3.14159265359;
+            scalar twoPi = 2 * pi;
+            scalar t = mesh().time().value();
+            scalar A = 0.001; //this is the magnitude scale of the force
+            scalar T = 1000.0; //this is the wave length for the force rotation
+            scalar ts = 150.0;   //this is the time scale for "noise" i.e. events in a shop
+           
+
+
+            int n_coeffs = T / ts; //number of fourier modes
+
+            
+            int ii = int(t/ts); //indicator whether to get new modes
+
+            //fourier coefficients 
+            std::vector<double> ci; 
+            
+            for (int n = 0; n < n_coeffs; ++n){
+                
+                Random  randomizer_i(ii + n);
+                scalar t1_rand = randomizer_i.sample01<scalar>();
+                ci.push_back(t1_rand - 0.5);
+            }
+
+            //normalize the coeffs
+            double sum1 = 0.0;
+            for (int i = 0; i < n_coeffs; ++i){
+                sum1 += ci[i] * ci[i];
+            }
+            
+            for (int i = 0; i < n_coeffs; ++i){
+                ci[i]   /= sqrt(sum1); 
+            }
+
+
+            //normalize to = [0, 2pi]
+            t = (2 * t * pi) / T;
+
+
+            scalar Fx = 0.0; 
+            scalar Fy = 0.0; 
+            scalar Fz = 0.0;
+
+            for (int i = 0; i < n_coeffs; ++i){
+                Fx += ci[i] * sin(i * t);
+                Fy += ci[i] * cos(i * t);
+            }
+            //no randomness in z-direction
+            Fz = 0.1 * sin(t); 
+
+            
+            
+           
+            vector source = A * vector(Fx, Fy, Fz); 
+
+            vectorField& Usource = eqn.source();
+            forAll(mesh_.cells(), i)
+            {
+                /*   
+                scalar x = mesh_.cellCentres()[i].x();
+                scalar y = mesh_.cellCentres()[i].y();
+                scalar z = mesh_.cellCentres()[i].z();
+                */
+                
+                Usource[i] = source*mesh_.V()[i];
+                
+       
+            }
+           
+        #};
+        codeSetValue
+        #{
+               
+           
+        #};
+ 
+        // Dummy entry. Make dependent on above to trigger recompilation
+        code
+        #{
+            $codeInclude
+            $codeCorrect
+            $codeAddSup
+            $codeSetValue
+        #};
+    }
+   
+ 
+    bananaCoeffs
+    {
+    // Dummy entry
+      selectionMode   all;
+    }
+ 
+ 
+ 
+}
+*/
+
+
+// ************************************************************************* //

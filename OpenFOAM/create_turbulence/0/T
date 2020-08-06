@@ -1,0 +1,101 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7  
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 293;
+
+boundaryField
+{
+   
+    "aisle.*"
+    {
+        type fixedValue;
+        value $internalField;
+    }
+    
+    "human_body.*"
+    {
+        type fixedValue;
+        value $internalField;
+    }
+
+    "human_mouth.*"
+    {
+        type fixedValue;
+        value uniform 309;
+    }
+
+    z0
+    {
+        type zeroGradient;
+    }
+
+    z1
+    {
+        type zeroGradient;
+    }
+
+    "x.*"
+    {
+        type cyclicAMI;
+        value   $internalField;
+    }
+
+    "y.*"
+    {
+        type cyclicAMI;
+        value   $internalField;
+    }
+
+   /* mouth
+    {
+        type    codedFixedValue; 
+        value   uniform 293; 
+        redirectType   diskInlet;
+        code 
+        #{ 
+        
+            
+            scalar pulse_duration = 0.3; //s
+            scalar Tinf = 293;
+            scalar Tin = 305;
+            scalar twoPi = 3.14*2;
+            scalar f = 0.5/pulse_duration;
+
+            fixedValueFvPatchScalarField myPatch(*this);
+
+            scalar t = this->db().time().value();
+            
+            scalar T = Tinf;
+            if (t <= pulse_duration){
+                scalar T = Tin;
+            }
+
+            
+
+            
+            operator==(T); //no idea why there has to be a negative sign here
+            //operator==(myPatch);
+
+
+        #}; 
+    }*/
+
+    
+}
+
+// ************************************************************************* //

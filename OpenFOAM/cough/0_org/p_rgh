@@ -1,0 +1,74 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7  
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      p;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 -1 -2 0 0 0 0];
+
+internalField   uniform 1e5;
+
+boundaryField
+{
+    
+    
+    "aisle.*"
+    {
+        type            fixedFluxPressure;
+        gradient        uniform 0;
+        value           $internalField;
+    }
+
+    "human_body.*"
+    {
+        type            fixedFluxPressure;
+        gradient        uniform 0;
+        value           $internalField;
+    }
+
+    "human_mouth.*"
+    {
+        type            fixedFluxPressure;
+        gradient        uniform 0;
+        value           $internalField;
+    }
+
+    z0
+    {
+        type            fixedFluxPressure;
+        gradient        uniform 0;
+        value           $internalField;
+    }
+
+    z1
+    {
+        type            fixedFluxPressure;
+        gradient        uniform 0;
+        value           $internalField;
+    }
+
+    "x.*"
+    {
+        type cyclicAMI;
+        value   $internalField;
+    }
+
+    "y.*"
+    {
+        type cyclicAMI;
+        value   $internalField;
+    }
+
+}
+
+// ************************************************************************* //

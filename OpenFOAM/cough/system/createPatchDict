@@ -1,0 +1,92 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createPatchDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+pointSync false;
+//pointSync true;
+// Patches to create.
+patches
+(
+    //-6 to 6
+    {
+        name xx0;
+        patchInfo
+        {
+            type cyclicAMI;
+            neighbourPatch xx1;
+            //transform       noOrdering;
+            transform       translational;
+            separationVector (12 0 0);
+            matchTolerance 1E-2;
+        }
+        
+        constructFrom patches;
+        patches (x0);   
+    }
+
+
+    {
+        name xx1;
+        patchInfo
+        {
+            type cyclicAMI;
+            neighbourPatch xx0;
+            //transform       noOrdering;
+            transform       translational;
+            separationVector (-12 0 0);
+            matchTolerance 1E-2;
+        }
+        
+        constructFrom patches;
+        patches (x1);   
+    }
+
+    //-5 to 5
+    {
+        name yy0;
+        patchInfo
+        {
+            type cyclicAMI;
+            neighbourPatch yy1;
+            //transform       noOrdering;
+            transform       translational;
+            separationVector (0 10 0);
+            matchTolerance 1E-2;
+        }
+        
+        constructFrom patches;
+        patches (y0);   
+    }
+
+    {
+        name yy1;
+        patchInfo
+        {
+            type cyclicAMI;
+            neighbourPatch yy0;
+            //transform       noOrdering;
+            transform       translational;
+            separationVector (0 -10 0);
+            matchTolerance 1E-2;
+        }
+        
+        constructFrom patches;
+        patches (y1);   
+    }
+
+
+);
+
+// ************************************************************************* //

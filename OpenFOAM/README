@@ -1,0 +1,18 @@
+The create_geometry.py script depends on packages blockmesher and roomgenerator which can be both found from
+bitbucket
+
+case: create_turbulence
+    -Initializes the background turbulence field. The forcing is controlled through fvOptions
+    -the parameter A in fvOptions controls the background velocity magnitude and T controls the time scale
+    -No refinments around humans are used in this case to allow longer time steps
+
+case: cough
+    -Similar to create_turbulence but contains refinements around human(s). 
+    -The cough is modelled as a scalar for now
+
+
+
+to run:
+
+ ./create_both_meshes.sh
+ ./run_both_simulations.sh

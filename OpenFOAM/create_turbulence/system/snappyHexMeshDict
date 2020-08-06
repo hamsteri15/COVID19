@@ -1,0 +1,237 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+castellatedMesh true;
+snap            true;
+addLayers       true;
+
+
+////https://www.cfd-online.com/Forums/openfoam-meshing/195060-snappyhexmesh-different-patch-names-stl-file.html
+
+geometry
+{
+    
+    aisle_0
+    {
+        file "aisle_0.stl";
+        type triSurfaceMesh;
+    }
+
+    aisle_1
+    {
+        file "aisle_1.stl";
+        type triSurfaceMesh;
+    }
+
+    aisle_2
+    {
+        file "aisle_2.stl";
+        type triSurfaceMesh;
+    }
+
+    aisle_3
+    {
+        file "aisle_3.stl";
+        type triSurfaceMesh; 
+    }
+
+    human_body_0
+    {
+        file "human_body_0.stl";
+        type triSurfaceMesh; 
+    }
+
+    human_mouth_0
+    {
+        file "human_mouth_0.stl";
+        type triSurfaceMesh; 
+    }
+
+    
+
+    refinement_body_0
+    {
+        file "refinement_body_0.stl";
+        type triSurfaceMesh; 
+    }
+
+    refinement_mouth_0
+    {
+        file "refinement_mouth_0.stl";
+        type triSurfaceMesh; 
+    }
+
+
+    refinement_large_0
+    {
+        file "refinement_large_0.stl";
+        type triSurfaceMesh; 
+    }
+
+
+    
+};
+
+castellatedMeshControls
+{
+    maxLocalCells  10000000;
+    maxGlobalCells 20000000;
+    minRefinementCells 0;
+    maxLoadUnbalance 0.10;
+    nCellsBetweenLevels 1;
+    
+    features
+    (
+       
+    );
+
+
+    refinementSurfaces
+    {
+        
+        "aisle.*"
+        {
+            
+            level (0 0); //min / max
+            patchInfo
+            {
+                type wall;
+                
+            }
+        }
+
+        "human.*"
+        {
+            
+            level (1 2);
+
+            
+            patchInfo
+            {
+                type wall;
+                
+            }
+        }
+        
+        
+        
+    }
+    resolveFeatureAngle 30;
+    planarAngle 30;
+    refinementRegions
+    {
+
+        refinement_large_0
+        {
+            mode inside;
+            levels ((1E15 2)); 
+        } 
+        /*
+        "refinement_body_.*"
+        {
+            mode inside;
+            levels ((1E15 3)); 
+        }
+
+        "refinement_mouth_.*"
+        {
+            mode inside;
+            levels ((1E15 4)); 
+        }
+        */
+
+    }
+    locationInMesh ( 0 0 4.0);
+    allowFreeStandingZoneFaces true;
+}
+
+snapControls
+{
+    nSmoothPatch 3;
+    tolerance 2.0;
+    nSolveIter 30;
+    nRelaxIter 5;
+    nFeatureSnapIter 10;
+    implicitFeatureSnap true;
+    explicitFeatureSnap false;
+    multiRegionFeatureSnap false;
+}
+
+
+// Settings for the layer addition.
+addLayersControls
+{
+    // Are the thickness parameters below relative to the undistorted
+    // size of the refined cell outside layer (true) or absolute sizes (false).
+    relativeSizes true;
+
+    // Per final patch (so not geometry!) the layer information
+    layers
+    {
+        "aisle.*"
+        {
+            nSurfaceLayers 1;
+        }
+
+        "human.*"
+        {
+            nSurfaceLayers 1;
+        }
+
+        
+    }
+
+    // Expansion factor for layer mesh
+    expansionRatio 1.0;
+    finalLayerThickness 0.5;
+    minThickness 0.3;
+    nGrow 0;
+    featureAngle 120;
+    slipFeatureAngle 30;
+    nRelaxIter 3;
+    nSmoothSurfaceNormals 1;
+    nSmoothNormals 3;
+    nSmoothThickness 10;
+    maxFaceThicknessRatio 0.5;
+    maxThicknessToMedialRatio 0.3;
+    minMedianAxisAngle 90;
+    nBufferCellsNoExtrude 0;
+    nLayerIter 50;
+}
+
+
+meshQualityControls
+{
+  maxNonOrtho         60;
+  maxBoundarySkewness 20;
+  maxInternalSkewness 10;
+  maxConcave          80;
+  nSmoothScale 4;
+  minVol              1e-20;
+  minTetQuality       1e-30;
+  minArea             -1;
+  minTwist            0.0;
+  minDeterminant      0.001;
+  minFaceWeight       0.02;
+  minVolRatio         0.01;
+  minTriangleTwist    -1;
+  errorReduction 0.75;
+}
+
+mergeTolerance 1e-6;
+
+// ************************************************************************* //
+

@@ -1,0 +1,104 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7  
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      s1;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    "aisle.*"
+    {
+        type zeroGradient;
+        
+    }
+    
+    "human.*"
+    {
+        type zeroGradient;
+    }
+
+    "mouth.*"
+    {
+        //type fixedValue;
+        //value uniform 1;
+
+
+        type codedFixedValue; 
+        value uniform 1; 
+        redirectType   scalarInlet;
+        code 
+        #{ 
+        
+            
+            scalar pulse_duration = 0.3; //s
+
+  
+            scalar twoPi = 3.14*2;
+            scalar f = 0.5/pulse_duration;
+
+            fixedValueFvPatchScalarField myPatch(*this);
+
+            scalar t = this->db().time().value();
+            
+
+            
+
+            scalar val = 0.0;
+            if (t <= pulse_duration){
+                val = 1.0;
+            }
+            
+
+            const vectorField n(this->patch().nf());
+            vector dir(1.0, 0.0, 0.0);
+
+            auto temp = val * dir & n;
+            
+            operator==(-temp); //no idea why there has to be a negative sign here
+            //operator==(myPatch);
+
+
+        #}; 
+
+
+
+    }
+
+    z0
+    {
+        type zeroGradient;
+    }
+
+    z1
+    {
+        type zeroGradient;
+    }
+
+    "x.*"
+    {
+        type cyclicAMI;
+        value   $internalField;
+    }
+
+    "y.*"
+    {
+        type cyclicAMI;
+        value   $internalField;
+    }
+}
+
+// ************************************************************************* //
