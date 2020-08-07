@@ -3,4 +3,5 @@ Input files for reproducing simulations in https://doi.org/10.1016/j.ssci.2020.1
 
 
 ./FDS      - inputs for FDS
+
 ./OpenFOAM - inputs and a case file for OpenFOAM-7
