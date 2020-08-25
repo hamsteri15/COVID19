@@ -1,4 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% NS3dLab code shared under a license, see LICENSE.
 % Monte-Carlo code shared under the MIT license. Simulates 
 % random walkers infecting others in a public place
 % The code accumulates dose for each individual

@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% NS3dLab code shared under the MIT license. 
+% NS3dLab code shared under a license, see LICENSE.
 % The code may or may not function on a GPU. Nevertheless, the code 
 % may be executable also on newer Matlab versions on a regular CPU without 
 % compatible GPU. 
