@@ -1,0 +1,38 @@
+
+
+The source code for the Monte-Carlo model B (in V.Vuorinen et al. Safety Science Volume 130, October 2020, 104866). The code is written in Python.  
+
+
+An example simulation can be run with testSimulation.py. The simulation uses the store layout in file ExampleSuperMarket.pbm but this can be changed in testSimulation.py. Also parameters considering the simulation length (i.e. number of customers) are defined here. Other input parameters (diffusion and aerosol emission etc.) are defined in the file Params.py. 
+
+The code produces the following output: 
+-store_data_{seed}.dat
+	Data on every time step with 4 columns: 
+		1 customers in store
+		2 customers heading for exit
+		3 infected customers in store
+		4 exposure on healthy customers during time step.
+-integrated_plumes_store_data_{seed}.dat
+	Map of the time integrated aerosol concentration in the store (size is the same as the store grid)
+-customer_data_{seed}.dat 
+	Data on every single customer with columns:
+		1 boolean stating if customer is infected
+		2 number of items on shopping list
+		3 exposure (see Note below)
+		4 time spent in the store
+		5 time customer spent in points where concentration > 0
+		6 time customer spent in points where concentration > EXPOSURELIMIT
+Optional:	 
+-simFigure_{seed}_{step}.png (only if outputLevel set to 1 in testSimulation.py)
+	Snapshot of the store layout
+
+Note: all the output given by the code compute exposure to all aerosols in the cubic meter control volume. To compare the results in the paper, the inhalation rate must be taken into account (see paper). 
+
+
+
+
+
+
+
+
+
